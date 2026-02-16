@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parecer Técnico de Alinhamento - Alan Gonçalves Viana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            /* --- Atmosfera --- */
+            --live-deep: #06192a;
+            /* --- Superfícies (Glassmorphism) --- */
+            --live-glass: rgba(10, 36, 61, 0.75);
+            --live-glass-hover: rgba(15, 45, 75, 0.90);
+            --glass-blur: blur(20px) saturate(180%);
+            /* --- Luz & Ação --- */
+            --live-accent: #00e800; /* Verde Live */
+            --live-accent-dim: rgba(0, 232, 0, 0.15);
+            --live-danger: #ff3b3b;
+            --kinetic-gradient: linear-gradient(135deg, #ffffff 0%, #a0a0a0 50%, #00e800 100%);
+            /* --- Física --- */
+            --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-fluid: cubic-bezier(0.4, 0.0, 0.2, 1);
+            /* --- Bordas --- */
+            --border-subtle: rgba(255, 255, 255, 0.1);
+            --border-active: rgba(0, 232, 0, 0.5);
+        }
+
+        body {
+            font-family: 'Merriweather', serif;
+            color: #E0E0E0;
+            background-color: var(--live-deep);
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--live-glass);
+            backdrop-filter: var(--glass-blur);
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            position: relative;
+        }
+
+        header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        header .logo {
+            width: 80px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 5px var(--live-accent));
+        }
+
+        header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.2em;
+            color: var(--live-accent);
+            margin: 0;
+            text-shadow: 0 0 10px rgba(0, 232, 0, 0.5);
+        }
+
+        header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4em;
+            color: #B0B0B0;
+            margin: 5px 0 15px 0;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--live-accent-dim);
+            color: var(--live-accent);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            border: 1px solid var(--live-accent);
+        }
+
+        .badge.recommended { background-color: rgba(0, 232, 0, 0.15); color: var(--live-accent); border-color: var(--live-accent); }
+        .badge.recommended-resalvas { background-color: rgba(255, 193, 7, 0.15); color: #FFD700; border-color: #FFD700; }
+        .badge.not-recommended { background-color: rgba(255, 59, 59, 0.15); color: var(--live-danger); border-color: var(--live-danger); }
+
+        .badge .lucide {
+            margin-right: 5px;
+            width: 18px;
+            height: 18px;
+        }
+
+        section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(10, 36, 61, 0.5);
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        h3 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--live-accent);
+            border-bottom: 2px solid var(--border-active);
+            padding-bottom: 8px;
+            margin-top: 0;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+        }
+
+        h3 .lucide {
+            margin-right: 10px;
+            color: #fff;
+        }
+
+        .diagnostico p {
+            font-size: 1.05em;
+            color: #C0C0C0;
+            text-align: justify;
+        }
+
+        .star-analysis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .star-item {
+            background-color: var(--live-glass-hover);
+            border: 1px solid var(--border-subtle);
+            border-left: 5px solid var(--live-accent);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s var(--ease-fluid);
+        }
+
+        .star-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 232, 0, 0.3);
+            border-left-color: var(--live-accent);
+        }
+
+        .star-item h4 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--live-accent);
+            margin-top: 0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 1.1em;
+        }
+
+        .star-item h4 .lucide {
+            margin-right: 8px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .star-item p {
+            font-size: 0.95em;
+            color: #D0D0D0;
+        }
+
+        .swot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .swot-card {
+            background-color: var(--live-glass-hover);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s var(--ease-fluid), box-shadow 0.3s var(--ease-fluid);
+        }
+
+        .swot-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .swot-card.strengths { border-left: 5px solid var(--live-accent); }
+        .swot-card.weaknesses { border-left: 5px solid var(--live-danger); }
+        .swot-card.opportunities { border-left: 5px solid #00BFFF; } /* Deep Sky Blue */
+        .swot-card.threats { border-left: 5px solid #FF8C00; } /* Dark Orange */
+
+        .swot-card h4 {
+            font-family: 'Poppins', sans-serif;
+            margin-top: 0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 1.1em;
+        }
+
+        .swot-card.strengths h4 { color: var(--live-accent); }
+        .swot-card.weaknesses h4 { color: var(--live-danger); }
+        .swot-card.opportunities h4 { color: #00BFFF; }
+        .swot-card.threats h4 { color: #FF8C00; }
+
+        .swot-card h4 .lucide {
+            margin-right: 8px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .swot-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .swot-card li {
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            color: #D0D0D0;
+        }
+
+        .skill-bars {
+            margin-top: 20px;
+        }
+
+        .skill-item {
+            margin-bottom: 15px;
+        }
+
+        .skill-item label {
+            font-family: 'Poppins', sans-serif;
+            display: block;
+            margin-bottom: 5px;
+            color: #D0D0D0;
+            font-size: 0.95em;
+        }
+
+        .skill-bar-bg {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            height: 10px;
+            overflow: hidden;
+        }
+
+        .skill-bar-fill {
+            height: 100%;
+            width: 0; /* Initial width for animation */
+            background: linear-gradient(90deg, #00BFFF, var(--live-accent));
+            border-radius: 5px;
+            transition: width 1.5s var(--spring-bounce);
+            animation: fillBar 1.5s var(--spring-bounce) forwards;
+        }
+
+        @keyframes fillBar {
+            from { width: 0; }
+            to { width: var(--skill-width); }
+        }
+
+        .scorecard-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .score-item {
+            background-color: var(--live-glass-hover);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .score-item h4 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--live-accent);
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+        }
+
+        .score-item .score {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 8px rgba(0, 232, 0, 0.7);
+        }
+
+        .final-score {
+            margin-top: 30px;
+            text-align: center;
+            background: linear-gradient(45deg, var(--live-accent-dim), rgba(0, 232, 0, 0.05));
+            border: 1px solid var(--live-accent);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(0, 232, 0, 0.4);
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { box-shadow: 0 0 10px rgba(0, 232, 0, 0.4); }
+            to { box-shadow: 0 0 25px rgba(0, 232, 0, 0.7); }
+        }
+
+        .final-score h3 {
+            color: #fff;
+            margin-top: 0;
+            font-size: 1.8em;
+            border-bottom: none;
+            justify-content: center;
+        }
+
+        .final-score .score {
+            font-family: 'Poppins', sans-serif;
+            font-size: 4em;
+            font-weight: 700;
+            color: var(--live-accent);
+            text-shadow: 0 0 15px rgba(0, 232, 0, 1);
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+            margin-left: 20px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background-color: var(--border-subtle);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: -8px;
+            width: 18px;
+            height: 18px;
+            background-color: var(--live-accent);
+            border-radius: 50%;
+            border: 2px solid var(--live-deep);
+        }
+
+        .timeline-item h4 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--live-accent);
+            margin: 0 0 5px 0;
+            font-size: 1.1em;
+        }
+
+        .timeline-item p {
+            font-size: 0.9em;
+            color: #C0C0C0;
+            margin: 0;
+        }
+
+        .cta-button {
+            display: block;
+            width: fit-content;
+            margin: 40px auto 0 auto;
+            padding: 15px 30px;
+            background-color: var(--live-accent);
+            color: var(--live-deep);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2em;
+            font-weight: 700;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0, 232, 0, 0.4);
+            transition: all 0.3s var(--ease-fluid);
+        }
+
+        .cta-button:hover {
+            background-color: #00FF00;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 232, 0, 0.6);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 0.85em;
+            color: #808080;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px auto;
+            }
+            header h1 {
+                font-size: 1.8em;
+            }
+            header h2 {
+                font-size: 1.2em;
+            }
+            .badge {
+                position: static;
+                margin-top: 15px;
+                justify-content: center;
+            }
+            .swot-grid, .star-analysis, .scorecard-dashboard {
+                grid-template-columns: 1fr;
+            }
+            .final-score .score {
+                font-size: 3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_xM7u4zJ_sL_7zE_0pQf-J8d5J2yK_j1Syg&s" alt="Live Consultoria Logo" class="logo">
+            <h1>Parecer Técnico de Alinhamento</h1>
+            <h2>Candidato: Alan Gonçalves Viana</h2>
+            <div class="badge recommended-resalvas">
+                <i data-lucide="alert-circle"></i>
+                RECOMENDADO COM RESSALVAS
+            </div>
+        </header>
+
+        <section class="diagnostico">
+            <h3><i data-lucide="cpu"></i> Diagnóstico de Trajetória</h3>
+            <p>Alan Gonçalves Viana demonstra uma trajetória consistente e densa na gestão de operações de food service, especificamente como "Gerente de restaurante e lanchonete" e, mais recentemente, como "Gerente" no ambiente complexo de "Clube do Botafogo / MLD Stadium Catering Comércio de Alimentos". Sua experiência abrange a coordenação integral das operações diárias, gestão de equipes (incluindo recrutamento, seleção, treinamento e folha salarial), supervisão de estoque e cardápios, e a essencial resolução de problemas operacionais. Alan também apresenta um histórico focado na garantia da qualidade do serviço e satisfação do cliente, com habilidades em atendimento e resolução de reclamações. Sua vivência na organização e fechamento de eventos, bem como no desenvolvimento de ações de marketing e fidelização, indica um perfil com visão comercial estratégica, crucial para um ambiente dinâmico como o Session Bar. A menção de "Janeiro 2025" para sua experiência atual sugere uma possível projeção de término ou um erro de digitação, que deve ser esclarecido.</p>
+        </section>
+
+        <section class="star-analysis-section">
+            <h3><i data-lucide="star"></i> Análise Comportamental (Método STAR)</h3>
+            <div class="star-analysis">
+                <div class="star-item">
+                    <h4><i data-lucide="map-pin"></i> Situação</h4>
+                    <p>Em um ambiente de alto volume e complexidade, como o catering de um clube (Clube do Botafogo), onde a pressão por excelência operacional e satisfação do cliente é constante e impacta diretamente a reputação da instituição.</p>
+                </div>
+                <div class="star-item">
+                    <h4><i data-lucide="clipboard-list"></i> Tarefa</h4>
+                    <p>Garantir a fluidez das operações diárias, desde a gestão da equipe até o controle de estoque, a qualidade dos pratos e o atendimento ao cliente, incluindo a organização de eventos e a resolução de intercorrências.</p>
+                </div>
+                <div class="star-item">
+                    <h4><i data-lucide="zap"></i> Ação</h4>
+                    <p>Alan <strong>coordenou</strong> as operações, <strong>assumiu</strong> responsabilidade por contratação e treinamento, <strong>supervisionou</strong> estoque e cardápios, <strong>realizou</strong> interface com proprietários e equipe de cozinha, <strong>desenvolveu</strong> ações de marketing e <strong>resolveu</strong> reclamações de clientes proativamente.</p>
+                </div>
+                <div class="star-item">
+                    <h4><i data-lucide="award"></i> Resultado</h4>
+                    <p>Contribuiu para a "garantia da qualidade do serviço e satisfação do cliente", "organização e fechamento de eventos" e "fidelização de clientes".</p>
+                    <p><strong>Ponto de Atenção:</strong> Ausência de métricas quantificáveis (ex: "redução de x% no turnover", "aumento de y% na satisfação", "crescimento de vendas em z%").</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="temperament-analysis">
+            <h3><i data-lucide="flask-conical"></i> Análise de Temperamento e Fit</h3>
+            <p><strong>Perfil Estimado:</strong> Colérico-Sanguíneo.</p>
+            <p><strong>Análise de Fit:</strong> O perfil de Alan sugere uma predominância Colérica, evidenciada por sua capacidade de comando, foco em resultados, gestão de equipes, e resolução de problemas. A forte atuação em RH e controle operacional reforça a faceta do líder executor. A vertente Sanguínea se manifesta em sua habilidade de comunicação, interface com diversos stakeholders (funcionários, proprietários) e o foco em atendimento ao cliente e fidelização, aspectos cruciais para a dinâmica social de um bar. Esta combinação é altamente alinhada para a vaga de Gerente de Bar no Session Bar, que exige um líder proativo, com pulso firme na operação e habilidade para engajar clientes e equipe. A atenção deve ser dada, em fases futuras, para garantir que a urgência Colérica não se manifeste em impaciência e que a paixão Sanguínea seja canalizada para a organização e não para a dispersão.</p>
+        </section>
+
+        <section class="swot-section">
+            <h3><i data-lucide="box-select"></i> Matriz Estratégica (SWOT)</h3>
+            <div class="swot-grid">
+                <div class="swot-card strengths">
+                    <h4><i data-lucide="trending-up"></i> Forças</h4>
+                    <ul>
+                        <li>Gestão operacional robusta em ambientes de alto volume (catering, restaurante).</li>
+                        <li>Liderança completa de equipe (RH, treinamento, folha salarial).</li>
+                        <li>Foco em qualidade, satisfação do cliente e resolução de reclamações.</li>
+                        <li>Experiência em controle de estoque e cardápios.</li>
+                        <li>Habilidade em marketing e fidelização de clientes.</li>
+                        <li>Conhecimento em higiene e segurança alimentar.</li>
+                    </ul>
+                </div>
+                <div class="swot-card weaknesses">
+                    <h4><i data-lucide="trending-down"></i> Fraquezas</h4>
+                    <ul>
+                        <li>Ausência de resultados quantitativos (KPIs, métricas de sucesso) no CV.</li>
+                        <li>Educação formal limitada ao Ensino Médio, embora compensada por experiência.</li>
+                        <li>Data de experiência ("Janeiro 2025") confusa, requer esclarecimento.</li>
+                        <li>Falta de experiência específica e detalhada em gestão de *bares* ou mixologia.</li>
+                    </ul>
+                </div>
+                <div class="swot-card opportunities">
+                    <h4><i data-lucide="lightbulb"></i> Oportunidades</h4>
+                    <ul>
+                        <li>Implementar processos de gestão de equipe e RH para o Session Bar.</li>
+                        <li>Estruturar o controle de estoque e custos de bebidas de forma otimizada.</li>
+                        <li>Desenvolver novas estratégias de marketing e eventos para o público do bar.</li>
+                        <li>Aproveitar sua experiência em grandes operações para escalar o negócio.</li>
+                    </ul>
+                </div>
+                <div class="swot-card threats">
+                    <h4><i data-lucide="alert-triangle"></i> Ameaças</h4>
+                    <ul>
+                        <li>Possível lacuna de conhecimento em particularidades da gestão de um bar (ex: mixologia, tendências de bebidas).</li>
+                        <li>Risco de desalinhamento de expectativas se o Session Bar for menor/menos complexo que sua última posição.</li>
+                        <li>Necessidade de adaptação rápida à cultura específica de um bar.</li>
+                        <li>A ausência de métricas anteriores pode dificultar o estabelecimento de metas claras de desempenho.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="skillset-section">
+            <h3><i data-lucide="award"></i> Skillset & Proficiência</h3>
+            <div class="skill-bars">
+                <div class="skill-item">
+                    <label>Gestão Operacional & Equipes</label>
+                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="--skill-width: 95%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <label>Controle de Estoque & Custos</label>
+                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="--skill-width: 85%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <label>Atendimento ao Cliente & Resolução de Problemas</label>
+                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="--skill-width: 80%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <label>Habilidade Comercial & Marketing</label>
+                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="--skill-width: 70%;"></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="scorecard-section">
+            <h3><i data-lucide="bar-chart-2"></i> Scorecard (Cálculo Live)</h3>
+            <div class="scorecard-dashboard">
+                <div class="score-item">
+                    <h4>Comportamental (40%)</h4>
+                    <div class="score">4.1<small>/5</small></div>
+                </div>
+                <div class="score-item">
+                    <h4>Técnica (20%)</h4>
+                    <div class="score">4.0<small>/5</small></div>
+                </div>
+                <div class="score-item">
+                    <h4>Role Play/Testes (30%)</h4>
+                    <div class="score">3.0<small>/5</small></div>
+                    <small>(Estimado, requer validação)</small>
+                </div>
+                <div class="score-item">
+                    <h4>Alinhamento (10%)</h4>
+                    <div class="score">4.0<small>/5</small></div>
+                </div>
+            </div>
+            <div class="final-score">
+                <h3><i data-lucide="check-circle"></i> SCORE FINAL PONDERADO</h3>
+                <div class="score">3.74<small>/5</small></div>
+                <small>(74.8%)</small>
+            </div>
+        </section>
+
+        <section class="parecer-consultor">
+            <h3><i data-lucide="clipboard-check"></i> Parecer do Consultor</h3>
+            <p>Alan Gonçalves Viana possui uma experiência gerencial altamente relevante para a vaga de Gerente de Bar no Session Bar, com um histórico robusto em gestão operacional, de equipes, estoque, atendimento e estratégias comerciais em ambientes de food service complexos. Sua capacidade de liderança e organização são pontos fortes notáveis. O score final ponderado reflete um bom alinhamento com os requisitos da vaga.</p>
+            <p>No entanto, há **ressalvas importantes** que precisam ser endereçadas em fases futuras do processo seletivo:</p>
+            <ul>
+                <li>A ausência de métricas e resultados quantitativos no currículo dificulta a mensuração exata do impacto de suas ações.</li>
+                <li>A data "Janeiro 2025" para a experiência atual é incomum e necessita de esclarecimento.</li>
+                <li>É crucial validar sua familiaridade e experiência específica com a gestão de um *bar*, incluindo conhecimentos de mixologia, tendências de bebidas e a cultura de bar, que podem diferir sutilmente de um restaurante/catering.</li>
+                <li>A etapa de testes práticos e role play (simulações) será fundamental para avaliar sua performance em cenários reais de bar e sua coachability.</li>
+            </ul>
+            <p>Dada a solidez de sua experiência gerencial e comportamental, Alan é um candidato com alto potencial.</p>
+            <p><strong><i data-lucide="alert-circle"></i> RECOMENDADO COM RESSALVAS</strong></p>
+        </section>
+
+        <section class="onboarding-plan">
+            <h3><i data-lucide="trending-up"></i> Plano de Imersão (Sugestão para os 3 primeiros dias)</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>Dia 1: Imersão Estratégica</h4>
+                    <p>Reunião com a direção para alinhamento de metas, cultura do Session Bar, e introdução à equipe. Foco na compreensão das prioridades e desafios imediatos.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Dia 2: Diagnóstico Operacional</h4>
+                    <p>Acompanhamento das operações de balcão e cozinha, observando fluxos de trabalho, gestão de estoque de bebidas/insumos e interação com clientes. Reunião com responsáveis por compras.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Dia 3: Análise e Feedback</h4>
+                    <p>Sessão para apresentar primeiras impressões, identificar oportunidades de melhoria em processos e discutir estratégias iniciais para otimização de custos e vendas. Início da leitura de manuais de procedimentos internos.</p>
+                </div>
+            </div>
+        </section>
+
+        <a href="[LINK_DO_CV_ORIGINAL_NO_DRIVE]" class="cta-button elite-button" target="_blank">
+            <i data-lucide="external-link"></i> ACESSAR CV ORIGINAL (ELITE)
+        </a>
+
+        <footer class="footer">
+            Live Consultoria Empresarial | Sistema de Inteligência em R&S | Protocolo Elite V6.0
+        </footer>
+    </div>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
